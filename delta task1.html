@@ -1,16 +1,7 @@
 <html>
 <head>
 <style type="text/css">
-  #button
-  {
-    background:lightblue;
-    border-radius: 30px;
-    width: 15em;
-    height: 3em;
-    position: absolute;
-     top: 600px;
-     left: 300px;
-  }
+
   #button2
   {
     background:lightgreen;
@@ -18,8 +9,8 @@
     width: 15em;
     height: 3em;
     position: absolute;
-     top: 600px;
-     left: 550px;
+     top: 150px;
+     left: 600px;
   }
   #button1
   {
@@ -28,43 +19,72 @@
     width: 15em;
     height: 3em;
     position: absolute;
-     top: 600px;
-     left: 800px;
+     top: 150px;
+     left: 100px;
   }
+  #button3
+  {
+    background:lightblue;
+    border-radius: 30px;
+    width: 15em;
+    height: 3em;
+    position: absolute;
+     top: 150px;
+     left: 1100px;
+  }
+  ol
+  {
+    height:700px;
+    background:gold;
+    margin-top:150px;
+    overflow:scroll;
+    overflow-x:hidden;
+  }
+  li {
+         text-align: center;
+         padding : 5px;
+         }
 
   </style>
 
 </head>
 <body onload="disp()" style="background-color:gold;" id="body">
-<p><textarea id ="text" style="background-color:silver;"disabled="true" placeholder="write note here"rows="4" cols="190"></textarea></p>
-<button id="button" onclick ="make()">Make Notes</button>
+  <div id="div1" onclick="make()">
+<p><textarea id ="text" style="background-color:silver;" disabled="true" placeholder="click here to write note"rows="4" cols="190"></textarea></p>
+</div>
 <button id="button2" disabled="true"onclick ="run()">Submit</button>
 <button id="button1" onclick ="edit()">Edit Notes</button>
+<button id="button3" onclick ="delet()">Delete Notes</button>
 <script>
-var i=0;
-var vals=[];
-
+var i=0,j=0,mn,ed;
+var vals=[],k;
 function disp(){
   if(localStorage.getItem("names") !== null)
   vals=JSON.parse(localStorage.getItem('names'));
   if(vals!=null)
 while(i<vals.length)
 {
-  var x = document.createElement("UL");
-      x.setAttribute("id", "myUL");
+  var x = document.createElement("OL");
+      x.setAttribute("id", "myOL");
       document.body.appendChild(x);
       var y = document.createElement("LI");
       var t = document.createTextNode(vals[i]);
       y.appendChild(t);
-      document.getElementById("myUL").appendChild(y);
+      document.getElementById("myOL").appendChild(y);
       i++;
 }}
+
 function make()
 {
   document.getElementById("text").disabled=false;
+  if(j==1)
+  document.getElementById("text").value=k;
+  else {
+    document.getElementById("text").value="";
+  }
   document.getElementById("text").style="background-color:white";
   document.getElementById("button2").disabled=false;
-  document.getElementById("button").disabled=true;
+  document.getElementById("button3").disabled=true;
   document.getElementById("button1").disabled=true;
 
 }
@@ -72,26 +92,57 @@ function run(){
 var txt =  document.getElementById("text").value;
 if(localStorage.getItem('names')!==null)
 vals=JSON.parse(localStorage.getItem('names'));
-vals.push(txt);
-document.getElementById("button").disabled=false;
 document.getElementById("button1").disabled=false;
+document.getElementById("button3").disabled=false;
+document.getElementById("button2").disabled=true;
 document.getElementById("text").disabled=true;
 document.getElementById("text").style="background-color:silver";
 document.getElementById("text").value="";
-localStorage.setItem('names', JSON.stringify(vals));
-vals=JSON.parse(localStorage.getItem('names'));
-while(i<vals.length)
-{
-  var x = document.createElement("UL");
-      x.setAttribute("id", "myUL");
-      document.body.appendChild(x);
-      var y = document.createElement("LI");
-      var t = document.createTextNode(vals[i]);
-      y.appendChild(t);
-      document.getElementById("myUL").appendChild(y);
-      i++;
+if(j==1)
+{vals.splice(mn,1,txt);
+  localStorage.setItem('names', JSON.stringify(vals));
+  var z=document.getElementById("myOL");
+  document.body.removeChild(z);
+  i=0;}
+else
+{vals.push(txt);
+localStorage.setItem('names', JSON.stringify(vals));}
+j=0;
+disp();
 }
+function delet()
+{
+  var rem = parseInt(prompt("enter serial number of note to be removed", ""));
+  if(localStorage.getItem('names')!==null)
+  vals=JSON.parse(localStorage.getItem('names'));
+  if(isNaN(rem))
+  {alert("enter number");}
+    else {
+  if(rem>vals.length)
+  alert("no such data");
+  else {
+  vals.splice(rem-1,1);
+  localStorage.setItem('names', JSON.stringify(vals));
+  var z=document.getElementById("myOL");
+  document.body.removeChild(z);
+  i=0;
+  disp();}}
+
 }//localStorage.removeItem('names');
+function edit()
+{j=1;
+  var ed=prompt("enter serial number of note to be edited", "");
+  if(localStorage.getItem('names')!==null)
+  vals=JSON.parse(localStorage.getItem('names'));
+  k=vals[ed-1];
+  mn=ed-1;
+  if(isNaN(ed))
+  {alert("enter number");}
+    else {if(ed>vals.length)
+    alert("no such data");
+    else
+      make();}
+}
 </script>
 </body>
 </html>
