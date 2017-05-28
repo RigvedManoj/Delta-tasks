@@ -1,0 +1,97 @@
+<html>
+<head>
+<style type="text/css">
+  #button
+  {
+    background:lightblue;
+    border-radius: 30px;
+    width: 15em;
+    height: 3em;
+    position: absolute;
+     top: 600px;
+     left: 300px;
+  }
+  #button2
+  {
+    background:lightgreen;
+    border-radius: 20px;
+    width: 15em;
+    height: 3em;
+    position: absolute;
+     top: 600px;
+     left: 550px;
+  }
+  #button1
+  {
+    background:lightblue;
+    border-radius: 30px;
+    width: 15em;
+    height: 3em;
+    position: absolute;
+     top: 600px;
+     left: 800px;
+  }
+
+  </style>
+
+</head>
+<body onload="disp()" style="background-color:gold;" id="body">
+<p><textarea id ="text" style="background-color:silver;"disabled="true" placeholder="write note here"rows="4" cols="190"></textarea></p>
+<button id="button" onclick ="make()">Make Notes</button>
+<button id="button2" disabled="true"onclick ="run()">Submit</button>
+<button id="button1" onclick ="edit()">Edit Notes</button>
+<script>
+var i=0;
+var vals=[];
+
+function disp(){
+  if(localStorage.getItem("names") !== null)
+  vals=JSON.parse(localStorage.getItem('names'));
+  if(vals!=null)
+while(i<vals.length)
+{
+  var x = document.createElement("UL");
+      x.setAttribute("id", "myUL");
+      document.body.appendChild(x);
+      var y = document.createElement("LI");
+      var t = document.createTextNode(vals[i]);
+      y.appendChild(t);
+      document.getElementById("myUL").appendChild(y);
+      i++;
+}}
+function make()
+{
+  document.getElementById("text").disabled=false;
+  document.getElementById("text").style="background-color:white";
+  document.getElementById("button2").disabled=false;
+  document.getElementById("button").disabled=true;
+  document.getElementById("button1").disabled=true;
+
+}
+function run(){
+var txt =  document.getElementById("text").value;
+if(localStorage.getItem('names')!==null)
+vals=JSON.parse(localStorage.getItem('names'));
+vals.push(txt);
+document.getElementById("button").disabled=false;
+document.getElementById("button1").disabled=false;
+document.getElementById("text").disabled=true;
+document.getElementById("text").style="background-color:silver";
+document.getElementById("text").value="";
+localStorage.setItem('names', JSON.stringify(vals));
+vals=JSON.parse(localStorage.getItem('names'));
+while(i<vals.length)
+{
+  var x = document.createElement("UL");
+      x.setAttribute("id", "myUL");
+      document.body.appendChild(x);
+      var y = document.createElement("LI");
+      var t = document.createTextNode(vals[i]);
+      y.appendChild(t);
+      document.getElementById("myUL").appendChild(y);
+      i++;
+}
+}//localStorage.removeItem('names');
+</script>
+</body>
+</html>
