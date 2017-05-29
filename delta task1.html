@@ -1,5 +1,6 @@
 <html>
 <head>
+  <title> Note Maker</title>
 <style type="text/css">
 
   #button2
@@ -173,7 +174,7 @@ function delet()
   if(isNaN(rem))
   {alert("enter number");}
     else {
-  if(rem>vals.length)
+  if(rem>vals.length||rem<1)
   alert("no such data");
   else {
   vals.splice(rem-1,1);
@@ -199,7 +200,7 @@ function edit()
   if(isNaN(ed))
   {alert("enter number");}
     else {
-      if(ed>vals.length)
+      if(ed>vals.length||ed<1)
     alert("no such data");
       else
         make();
