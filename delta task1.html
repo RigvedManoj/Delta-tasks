@@ -52,31 +52,73 @@
   <div id="div1" onclick="make()">
 <p><textarea id ="text" style="background-color:silver;" disabled="true" placeholder="click here to write note"rows="4" cols="190"></textarea></p>
 </div>
+<select id="priority" disabled="true" >
+    <option value="a1">Low</option>
+    <option value="a2">Moderate</option>
+    <option value="a3">High</option>
+  </select>
 <button id="button2" disabled="true"onclick ="run()">Submit</button>
 <button id="button1" onclick ="edit()">Edit Notes</button>
 <button id="button3" onclick ="delet()">Delete Notes</button>
+<button id="button4" onclick ="sort()">Sort</button>
 <script>
-var i=0,j=0,mn,ed;
-var vals=[],k;
+var i=0,j=0,mn,ed,bn=0,bm=0,bv;
+var vals=[],ord=[],k;
 function disp(){
   if(localStorage.getItem("names") !== null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem("levels") !== null)
+  ord=JSON.parse(localStorage.getItem('levels'));
   if(vals!=null)
 while(i<vals.length)
 {
   var x = document.createElement("OL");
       x.setAttribute("id", "myOL");
-      document.body.appendChild(x);
       var y = document.createElement("LI");
+      document.body.appendChild(x);
+      y.setAttribute("id",i);
       var t = document.createTextNode(vals[i]);
       y.appendChild(t);
       document.getElementById("myOL").appendChild(y);
+      //alert(ord[i]);
+      if(ord[i]=="a3")
+      document.getElementById(i).style="background-color:red";
+      if(ord[i]=="a2")
+      document.getElementById(i).style="background-color:brown";
+      if(ord[i]=="a1")
+      document.getElementById(i).style="background-color:green";
       i++;
 }}
-
+function sort()
+{
+  if(localStorage.getItem("names") !== null)
+  vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem("levels") !== null)
+  ord=JSON.parse(localStorage.getItem('levels'));
+  for(bn=0;bn<ord.length;bn++)
+  for(bm=bn;bm<ord.length;bm++)
+  {
+   if(ord[bn]<ord[bm])
+   {
+     bv=ord[bn];
+     ord[bn]=ord[bm];
+     ord[bm]=bv;
+     bv=vals[bn];
+     vals[bn]=vals[bm];
+     vals[bm]=bv;
+   }
+  }
+  localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('levels', JSON.stringify(ord));
+  var z=document.getElementById("myOL");
+  document.body.removeChild(z);
+  i=0;
+  disp();
+}
 function make()
 {
   document.getElementById("text").disabled=false;
+  document.getElementById("priority").disabled=false;
   if(j==1)
   document.getElementById("text").value=k;
   else {
@@ -90,31 +132,43 @@ function make()
 }
 function run(){
 var txt =  document.getElementById("text").value;
+var level= document.getElementById('priority').value;
+//alert(level);
 if(localStorage.getItem('names')!==null)
 vals=JSON.parse(localStorage.getItem('names'));
+if(localStorage.getItem('levels')!==null)
+ord=JSON.parse(localStorage.getItem('levels'));
 document.getElementById("button1").disabled=false;
 document.getElementById("button3").disabled=false;
 document.getElementById("button2").disabled=true;
 document.getElementById("text").disabled=true;
+document.getElementById("priority").disabled=true;
 document.getElementById("text").style="background-color:silver";
 document.getElementById("text").value="";
 if(j==1)
-{vals.splice(mn,1,txt);
+{ vals.splice(mn,1,txt);
+  ord.splice(mn,1,level);
   localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('levels', JSON.stringify(ord));
   var z=document.getElementById("myOL");
   document.body.removeChild(z);
   i=0;}
 else
 {vals.push(txt);
-localStorage.setItem('names', JSON.stringify(vals));}
+  ord.push(level);
+//  alert(ord.length);
+localStorage.setItem('names', JSON.stringify(vals));
+localStorage.setItem('levels', JSON.stringify(ord));}
 j=0;
-disp();
+sort();
 }
 function delet()
 {
   var rem = parseInt(prompt("enter serial number of note to be removed", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem('levels')!==null)
+  ord=JSON.parse(localStorage.getItem('levels'));
   if(isNaN(rem))
   {alert("enter number");}
     else {
@@ -122,27 +176,33 @@ function delet()
   alert("no such data");
   else {
   vals.splice(rem-1,1);
+  ord.splice(rem-1,1);
   localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('levels', JSON.stringify(ord));
   var z=document.getElementById("myOL");
   document.body.removeChild(z);
   i=0;
   disp();}}
 
 }//localStorage.removeItem('names');
+ //localStorage.removeItem('levels');
 function edit()
-{
+{j=1;
   var ed=parseInt(prompt("enter serial number of note to be edited", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem('levels')!==null)
+  ord=JSON.parse(localStorage.getItem('levels'));
   k=vals[ed-1];
   mn=ed-1;
   if(isNaN(ed))
   {alert("enter number");}
-    else {if(ed>vals.length)
+    else {
+      if(ed>vals.length)
     alert("no such data");
-    else
-    { j=1;
-     make();}}
+      else
+        make();
+               }
 }
 </script>
 </body>
