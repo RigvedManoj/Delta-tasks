@@ -130,7 +130,7 @@ function delet()
 
 }//localStorage.removeItem('names');
 function edit()
-{j=1;
+{
   var ed=parseInt(prompt("enter serial number of note to be edited", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
@@ -141,7 +141,8 @@ function edit()
     else {if(ed>vals.length)
     alert("no such data");
     else
-      make();}
+    { j=1;
+     make();}}
 }
 </script>
 </body>
