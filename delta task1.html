@@ -72,11 +72,11 @@ function disp(){
   ord=JSON.parse(localStorage.getItem('levels'));
   if(vals!=null)
 while(i<vals.length)
-{
-  var x = document.createElement("OL");
+{  if(i==0)
+{var x = document.createElement("OL");
       x.setAttribute("id", "myOL");
-      var y = document.createElement("LI");
-      document.body.appendChild(x);
+      document.body.appendChild(x);}
+  var y = document.createElement("LI");
       y.setAttribute("id",i);
       var t = document.createTextNode(vals[i]);
       y.appendChild(t);
@@ -209,3 +209,4 @@ function edit()
 </script>
 </body>
 </html>
+
