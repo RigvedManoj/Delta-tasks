@@ -63,10 +63,10 @@ function disp(){
   vals=JSON.parse(localStorage.getItem('names'));
   if(vals!=null)
 while(i<vals.length)
-{
-  var x = document.createElement("OL");
+{ if(i==0)
+{var x = document.createElement("OL");
       x.setAttribute("id", "myOL");
-      document.body.appendChild(x);
+      document.body.appendChild(x);}
       var y = document.createElement("LI");
       var t = document.createTextNode(vals[i]);
       y.appendChild(t);
