@@ -128,7 +128,7 @@ function make()
   document.getElementById("button2").disabled=false;
   document.getElementById("button3").disabled=true;
   document.getElementById("button1").disabled=true;
-
+  document.getElementById("button4").disabled=true;
 }
 function run(){
 var txt =  document.getElementById("text").value;
@@ -141,6 +141,7 @@ ord=JSON.parse(localStorage.getItem('levels'));
 document.getElementById("button1").disabled=false;
 document.getElementById("button3").disabled=false;
 document.getElementById("button2").disabled=true;
+document.getElementById("button4").disabled=false;
 document.getElementById("text").disabled=true;
 document.getElementById("priority").disabled=true;
 document.getElementById("text").style="background-color:silver";
@@ -152,15 +153,15 @@ if(j==1)
   localStorage.setItem('levels', JSON.stringify(ord));
   var z=document.getElementById("myOL");
   document.body.removeChild(z);
-  i=0;}
+  i=0;
+   j=0;
+ sort();}
 else
 {vals.push(txt);
   ord.push(level);
-//  alert(ord.length);
 localStorage.setItem('names', JSON.stringify(vals));
-localStorage.setItem('levels', JSON.stringify(ord));}
-j=0;
-disp();
+localStorage.setItem('levels', JSON.stringify(ord));
+disp();}
 }
 function delet()
 {
@@ -207,3 +208,4 @@ function edit()
 </script>
 </body>
 </html>
+
