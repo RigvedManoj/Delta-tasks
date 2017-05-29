@@ -131,7 +131,7 @@ function delet()
 }//localStorage.removeItem('names');
 function edit()
 {j=1;
-  var ed=prompt("enter serial number of note to be edited", "");
+  var ed=parseInt(prompt("enter serial number of note to be edited", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
   k=vals[ed-1];
