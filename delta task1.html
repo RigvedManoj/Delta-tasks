@@ -36,64 +36,89 @@
   ol
   {
     height:700px;
-    background:gold;
+    background:silver;
     margin-top:150px;
     overflow:scroll;
     overflow-x:hidden;
   }
   li {
          text-align: center;
-         padding : 5px;
+         padding : 20px;
+         font-weight: 600;
+         font-family: cursive;
+         text-transform: uppercase;
+         margin-bottom: 5px;
          }
-
+   p {
+        text-transform: none;
+        text-align: left;
+        font-style: italic;
+        font-weight: bold;
+        font-weight: normal;
+   }
+ textarea{
+   background-image: url("y1.jpg");
+ }
   </style>
 
 </head>
-<body onload="disp()" style="background-color:gold;" id="body">
-  <div id="div1" onclick="make()">
-<p><textarea id ="text" style="background-color:silver;" disabled="true" placeholder="click here to write note"rows="4" cols="190"></textarea></p>
+<body onload="disp()" style="background-color:silver;" id="body">
+<div id="div1" onclick="make()">
+<p><textarea id ="text1" style="text-align: center;" disabled="true" placeholder="click here to write Title"rows="1" cols="190"></textarea></p>
+<p><textarea id ="text"  disabled="true" placeholder="click here to write note"rows="4" cols="190"></textarea></p>
 </div>
 <select id="priority" disabled="true" >
     <option value="a1">Low</option>
     <option value="a2">Moderate</option>
     <option value="a3">High</option>
-  </select>
+</select>
 <button id="button2" disabled="true"onclick ="run()">Submit</button>
 <button id="button1" onclick ="edit()">Edit Notes</button>
 <button id="button3" onclick ="delet()">Delete Notes</button>
 <button id="button4" onclick ="sort()">Sort</button>
 <script>
-var i=0,j=0,mn,ed,bn=0,bm=0,bv;
-var vals=[],ord=[],k;
+var i=0,j=0,mn,ed,bn=0,bm=0,bv,j1=0,qaw=0;
+var vals=[],vals1=[],ord=[],k,k1;
 function disp(){
   if(localStorage.getItem("names") !== null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem("names1") !== null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
   if(localStorage.getItem("levels") !== null)
   ord=JSON.parse(localStorage.getItem('levels'));
   if(vals!=null)
 while(i<vals.length)
-{  if(i==0)
-{var x = document.createElement("OL");
+{
+  if(i==0)
+  {
+var x = document.createElement("OL");
       x.setAttribute("id", "myOL");
       document.body.appendChild(x);}
-  var y = document.createElement("LI");
+      var y = document.createElement("LI");
+      var z1 = document.createElement("P");
       y.setAttribute("id",i);
+      z1.setAttribute("id","q"+i);
+      var t1 = document.createTextNode(vals1[i]);
+      y.appendChild(t1);
       var t = document.createTextNode(vals[i]);
-      y.appendChild(t);
+      z1.appendChild(t);
       document.getElementById("myOL").appendChild(y);
-      //alert(ord[i]);
+      document.getElementById(i).appendChild(z1);
       if(ord[i]=="a3")
-      document.getElementById(i).style="background-color:red";
+      document.getElementById(i).style="background-image: url(b1.jpg);";
       if(ord[i]=="a2")
-      document.getElementById(i).style="background-color:brown";
+      document.getElementById(i).style="background-image: url(y1.jpg);";
       if(ord[i]=="a1")
-      document.getElementById(i).style="background-color:green";
+      document.getElementById(i).style="background-image: url(w1.jpg);";
       i++;
 }}
 function sort()
 {
+  qaw=1;
   if(localStorage.getItem("names") !== null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem("names1") !== null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
   if(localStorage.getItem("levels") !== null)
   ord=JSON.parse(localStorage.getItem('levels'));
   for(bn=0;bn<ord.length;bn++)
@@ -107,9 +132,13 @@ function sort()
      bv=vals[bn];
      vals[bn]=vals[bm];
      vals[bm]=bv;
+     bv=vals1[bn];
+     vals1[bn]=vals1[bm];
+     vals1[bm]=bv;
    }
   }
   localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('names1', JSON.stringify(vals1));
   localStorage.setItem('levels', JSON.stringify(ord));
   var z=document.getElementById("myOL");
   document.body.removeChild(z);
@@ -119,22 +148,25 @@ function sort()
 function make()
 {
   document.getElementById("text").disabled=false;
+  document.getElementById("text1").disabled=false;
   document.getElementById("priority").disabled=false;
-  if(j==1)
-  document.getElementById("text").value=k;
-  else {
-    document.getElementById("text").value="";
-  }
-  document.getElementById("text").style="background-color:white";
+  if(j==1&&j1==0)
+  {document.getElementById("text").value=k;
+  document.getElementById("text1").value=k1;
+j1++;}
+  document.getElementById("text1").style="text-align: center";
   document.getElementById("button2").disabled=false;
   document.getElementById("button3").disabled=true;
   document.getElementById("button1").disabled=true;
   document.getElementById("button4").disabled=true;
 }
 function run(){
+  j1=0;
+var txt1 = document.getElementById("text1").value;
 var txt =  document.getElementById("text").value;
 var level= document.getElementById('priority').value;
-//alert(level);
+if(localStorage.getItem('names1')!==null)
+vals1=JSON.parse(localStorage.getItem('names1'));
 if(localStorage.getItem('names')!==null)
 vals=JSON.parse(localStorage.getItem('names'));
 if(localStorage.getItem('levels')!==null)
@@ -144,23 +176,33 @@ document.getElementById("button3").disabled=false;
 document.getElementById("button2").disabled=true;
 document.getElementById("button4").disabled=false;
 document.getElementById("text").disabled=true;
+document.getElementById("text1").disabled=true;
 document.getElementById("priority").disabled=true;
-document.getElementById("text").style="background-color:silver";
 document.getElementById("text").value="";
+document.getElementById("text1").value="";
 if(j==1)
 { vals.splice(mn,1,txt);
+  vals1.splice(mn,1,txt1);
   ord.splice(mn,1,level);
   localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('names1', JSON.stringify(vals1));
   localStorage.setItem('levels', JSON.stringify(ord));
-  var z=document.getElementById("myOL");
-  document.body.removeChild(z);
-  i=0;
    j=0;
- sort();}
+   if(qaw==1)
+ sort();
+ else {
+   var z=document.getElementById("myOL");
+   document.body.removeChild(z);
+   i=0;
+   disp();
+ }
+}
 else
 {vals.push(txt);
+  vals1.push(txt1);
   ord.push(level);
 localStorage.setItem('names', JSON.stringify(vals));
+localStorage.setItem('names1', JSON.stringify(vals1));
 localStorage.setItem('levels', JSON.stringify(ord));
 disp();}
 }
@@ -169,6 +211,8 @@ function delet()
   var rem = parseInt(prompt("enter serial number of note to be removed", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem('names1')!==null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
   if(localStorage.getItem('levels')!==null)
   ord=JSON.parse(localStorage.getItem('levels'));
   if(isNaN(rem))
@@ -177,9 +221,11 @@ function delet()
   if(rem>vals.length||rem<1)
   alert("no such data");
   else {
+  vals1.splice(rem-1,1);
   vals.splice(rem-1,1);
   ord.splice(rem-1,1);
   localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('names1', JSON.stringify(vals1));
   localStorage.setItem('levels', JSON.stringify(ord));
   var z=document.getElementById("myOL");
   document.body.removeChild(z);
@@ -187,15 +233,19 @@ function delet()
   disp();}}
 
 }//localStorage.removeItem('names');
- //localStorage.removeItem('levels');
+//localStorage.removeItem('names1');
+//localStorage.removeItem('levels');
 function edit()
 {j=1;
   var ed=parseInt(prompt("enter serial number of note to be edited", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem('names1')!==null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
   if(localStorage.getItem('levels')!==null)
   ord=JSON.parse(localStorage.getItem('levels'));
   k=vals[ed-1];
+  k1=vals1[ed-1];
   mn=ed-1;
   if(isNaN(ed))
   {alert("enter number");}
@@ -209,4 +259,3 @@ function edit()
 </script>
 </body>
 </html>
-
