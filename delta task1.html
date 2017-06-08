@@ -1,5 +1,6 @@
 <html>
 <head>
+  <title> Note Maker</title>
 <style type="text/css">
 
   #button2
@@ -32,117 +33,251 @@
      top: 150px;
      left: 1100px;
   }
-  ol
+  ul
   {
     height:700px;
-    background:gold;
+    background:silver;
     margin-top:150px;
     overflow:scroll;
     overflow-x:hidden;
+    list-style-type: none;
   }
   li {
          text-align: center;
-         padding : 5px;
+         padding : 20px;
+         font-weight: 600;
+         font-family: cursive;
+         text-transform: uppercase;
+         margin-bottom: 5px;
          }
-
+   p {
+        text-transform: none;
+        text-align: left;
+        font-style: italic;
+        font-weight: bold;
+        font-weight: normal;
+   }
+ textarea{
+   background-image: url("y1.jpg");
+ }
   </style>
 
 </head>
-<body onload="disp()" style="background-color:gold;" id="body">
-  <div id="div1" onclick="make()">
-<p><textarea id ="text" style="background-color:silver;" disabled="true" placeholder="click here to write note"rows="4" cols="190"></textarea></p>
+<body onload="disp()" style="background-color:silver;" id="body">
+<div id="div1" onclick="make()">
+<p><textarea id ="text1" style="text-align: center;" disabled="true" placeholder="click here to write Title"rows="1" cols="190"></textarea></p>
+<p><textarea id ="text"  disabled="true" placeholder="click here to write note"rows="4" cols="190"></textarea></p>
 </div>
+<select id="priority" disabled="true" >
+    <option value="a1">Low</option>
+    <option value="a2">Moderate</option>
+    <option value="a3">High</option>
+</select>
 <button id="button2" disabled="true"onclick ="run()">Submit</button>
 <button id="button1" onclick ="edit()">Edit Notes</button>
 <button id="button3" onclick ="delet()">Delete Notes</button>
+<button id="button4" onclick ="sort()">Sort</button>
 <script>
-var i=0,j=0,mn,ed;
-var vals=[],k;
+var i=0,j=0,mn,ed,bn=0,bm=0,bv,j1=0,qaw=0;
+var vals=[],vals1=[],ord=[],k,k1;
+var rem,ed;
 function disp(){
   if(localStorage.getItem("names") !== null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem("names1") !== null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
+  if(localStorage.getItem("levels") !== null)
+  ord=JSON.parse(localStorage.getItem('levels'));
   if(vals!=null)
 while(i<vals.length)
-{ if(i==0)
-{var x = document.createElement("OL");
+{
+  if(i==0)
+  {
+var x = document.createElement("UL");
       x.setAttribute("id", "myOL");
       document.body.appendChild(x);}
       var y = document.createElement("LI");
+      var z1 = document.createElement("P");
+      y.setAttribute("id",i);
+      z1.setAttribute("id","q"+i);
+      var t1 = document.createTextNode(vals1[i]);
+      y.appendChild(t1);
       var t = document.createTextNode(vals[i]);
-      y.appendChild(t);
+      z1.appendChild(t);
       document.getElementById("myOL").appendChild(y);
+      document.getElementById(i).appendChild(z1);
+      var f1 = document.getElementById(i);
+     f1.addEventListener("click",modify);
+      if(ord[i]=="a3")
+      document.getElementById(i).style="background-image: url(b1.jpg);";
+      if(ord[i]=="a2")
+      document.getElementById(i).style="background-image: url(y1.jpg);";
+      if(ord[i]=="a1")
+      document.getElementById(i).style="background-image: url(w1.jpg);";
       i++;
 }}
 
+function modify(e)
+{
+  var z=document.getElementById("myOL");
+  document.body.removeChild(z);
+  i=0;
+  disp();
+  rem=e.target.id;
+  ed=e.target.id;
+  document.getElementById(rem).style="background-color: blue;";
+  rem++;
+  ed++;
+}
+function sort()
+{
+  qaw=1;
+  if(localStorage.getItem("names") !== null)
+  vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem("names1") !== null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
+  if(localStorage.getItem("levels") !== null)
+  ord=JSON.parse(localStorage.getItem('levels'));
+  for(bn=0;bn<ord.length;bn++)
+  for(bm=bn;bm<ord.length;bm++)
+  {
+   if(ord[bn]<ord[bm])
+   {
+     bv=ord[bn];
+     ord[bn]=ord[bm];
+     ord[bm]=bv;
+     bv=vals[bn];
+     vals[bn]=vals[bm];
+     vals[bm]=bv;
+     bv=vals1[bn];
+     vals1[bn]=vals1[bm];
+     vals1[bm]=bv;
+   }
+  }
+  localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('names1', JSON.stringify(vals1));
+  localStorage.setItem('levels', JSON.stringify(ord));
+  var z=document.getElementById("myOL");
+  document.body.removeChild(z);
+  i=0;
+  disp();
+}
 function make()
 {
   document.getElementById("text").disabled=false;
-  if(j==1)
-  document.getElementById("text").value=k;
-  else {
-    document.getElementById("text").value="";
-  }
-  document.getElementById("text").style="background-color:white";
+  document.getElementById("text1").disabled=false;
+  document.getElementById("priority").disabled=false;
+  if(j==1&&j1==0)
+  {document.getElementById("text").value=k;
+  document.getElementById("text1").value=k1;
+j1++;}
+  document.getElementById("text1").style="text-align: center";
   document.getElementById("button2").disabled=false;
-  document.getElementById("button3").disabled=true;
-  document.getElementById("button1").disabled=true;
-
+  //document.getElementById("button3").disabled=true;
+  //document.getElementById("button1").disabled=true;
+  //document.getElementById("button4").disabled=true;
 }
 function run(){
+  j1=0;
+
+var txt1 = document.getElementById("text1").value;
 var txt =  document.getElementById("text").value;
+var level= document.getElementById('priority').value;
+if((txt === null || txt.match(/^ *$/) !== null)&&(txt1=== null || txt1.match(/^ *$/) !== null))
+{;}
+else
+{
+if(localStorage.getItem('names1')!==null)
+vals1=JSON.parse(localStorage.getItem('names1'));
 if(localStorage.getItem('names')!==null)
 vals=JSON.parse(localStorage.getItem('names'));
+if(localStorage.getItem('levels')!==null)
+ord=JSON.parse(localStorage.getItem('levels'));
 document.getElementById("button1").disabled=false;
 document.getElementById("button3").disabled=false;
 document.getElementById("button2").disabled=true;
+document.getElementById("button4").disabled=false;
 document.getElementById("text").disabled=true;
-document.getElementById("text").style="background-color:silver";
-document.getElementById("text").value="";
+document.getElementById("text1").disabled=true;
+document.getElementById("priority").disabled=true;
+document.getElementById("text").value=null;
+document.getElementById("text1").value=null;
 if(j==1)
-{vals.splice(mn,1,txt);
+{ vals.splice(mn,1,txt);
+  vals1.splice(mn,1,txt1);
+  ord.splice(mn,1,level);
   localStorage.setItem('names', JSON.stringify(vals));
-  var z=document.getElementById("myOL");
-  document.body.removeChild(z);
-  i=0;}
+  localStorage.setItem('names1', JSON.stringify(vals1));
+  localStorage.setItem('levels', JSON.stringify(ord));
+   j=0;
+   if(qaw==1)
+ sort();
+ else {
+   var z=document.getElementById("myOL");
+   document.body.removeChild(z);
+   i=0;
+   disp();
+ }
+}
 else
 {vals.push(txt);
-localStorage.setItem('names', JSON.stringify(vals));}
-j=0;
-disp();
+  vals1.push(txt1);
+  ord.push(level);
+localStorage.setItem('names', JSON.stringify(vals));
+localStorage.setItem('names1', JSON.stringify(vals1));
+localStorage.setItem('levels', JSON.stringify(ord));
+disp();}
+}
 }
 function delet()
 {
-  var rem = parseInt(prompt("enter serial number of note to be removed", ""));
+  //var rem = parseInt(prompt("enter serial number of note to be removed", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem('names1')!==null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
+  if(localStorage.getItem('levels')!==null)
+  ord=JSON.parse(localStorage.getItem('levels'));
   if(isNaN(rem))
   {alert("enter number");}
     else {
   if(rem>vals.length||rem<1)
   alert("no such data");
   else {
+  vals1.splice(rem-1,1);
   vals.splice(rem-1,1);
+  ord.splice(rem-1,1);
   localStorage.setItem('names', JSON.stringify(vals));
+  localStorage.setItem('names1', JSON.stringify(vals1));
+  localStorage.setItem('levels', JSON.stringify(ord));
   var z=document.getElementById("myOL");
   document.body.removeChild(z);
   i=0;
   disp();}}
 
 }//localStorage.removeItem('names');
+//localStorage.removeItem('names1');
+//localStorage.removeItem('levels');
 function edit()
-{
-  var ed=parseInt(prompt("enter serial number of note to be edited", ""));
+{j=1;
+  //var ed=parseInt(prompt("enter serial number of note to be edited", ""));
   if(localStorage.getItem('names')!==null)
   vals=JSON.parse(localStorage.getItem('names'));
+  if(localStorage.getItem('names1')!==null)
+  vals1=JSON.parse(localStorage.getItem('names1'));
+  if(localStorage.getItem('levels')!==null)
+  ord=JSON.parse(localStorage.getItem('levels'));
   k=vals[ed-1];
+  k1=vals1[ed-1];
   mn=ed-1;
   if(isNaN(ed))
   {alert("enter number");}
-    else {if(ed>vals.length||ed<1)
+    else {
+      if(ed>vals.length||ed<1)
     alert("no such data");
-    else
-    { j=1;
-     make();}}
+      else
+        make();
+               }
 }
 </script>
 </body>
