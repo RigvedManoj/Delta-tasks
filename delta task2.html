@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+  <style>
+  body, canvas, html{margin:0;padding:0;border:0 none;}
+  canvas{display: block;}
+}
+</style>
+	<body>
+
+		<div id="body">
+		</div>
+    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+		<script>
+		    var i=0,j=50,x=0,y=0,count=0;
+        var maze;
+			var canvas = null;
+			var context = null;
+			var assets = ['robowalk00.png','robowalk01.png','robowalk02.png','robowalk03.png','robowalk04.png',
+						  'robowalk05.png','robowalk06.png','robowalk07.png','robowalk08.png','robowalk09.png',
+						  'robowalk10.png','robowalk11.png','robowalk12.png','robowalk13.png','robowalk15.png',
+						  'robowalk16.png','robowalk17.png','robowalk18.png'];
+			var frames = [],array = [];
+			var frameCount = 0,  currentFrame =0, framerate = 1000/30, go;
+			var left=0,right=0,top1=0,down=0,mr=0,ml=0,mt=0,md=0;
+			var kl=0;kr=0;
+      var onMazeLoad= function(){
+        while(1){
+        context.drawImage(maze,35,0,25,25,x,y,100,100);
+        array.push({x: x, y: y,val: "b"});
+        x+=100;
+        if(x>canvas.width)
+        {x=0
+         y+=100;}
+         if(y>canvas.height)
+        break;
+      }
+      x=0;
+      y=0;
+			for(var i5=0;i5<=200;i5+=100)
+       {context.drawImage(maze,0,0,30,30,700,300-i5,100,100);
+			 array[49-14*(i5/100)].val="g";}
+			 for(var i5=0;i5<=200;i5+=100)
+        {context.drawImage(maze,0,0,30,30,1200,400-i5,100,100);
+ 			 array[57-14*(i5/100)].val="g";}
+			 for(var i5=0;i5<=200;i5+=100)
+        {context.drawImage(maze,0,0,30,30,100,400-i5,100,100);
+ 			 array[68-14*(i5/100)].val="g";}
+			 for(var i5=0;i5<=400;i5+=100)
+        {context.drawImage(maze,0,0,30,30,300+i5,100,100,100);
+ 			 array[17+(i5/100)].val="g";}
+			 for(var i5=0;i5<=700;i5+=100)
+				{context.drawImage(maze,0,0,30,30,300+i5,500,100,100);
+				array[73+(i5/100)].val="g";}
+				for(var i2=0;i2<=200;i2+=100)
+				for(var i3=0;i3<=100;i3+=100)
+				{context.drawImage(maze,0,0,30,30,i2,i3,100,100);
+					context.drawImage(maze,0,0,30,30,1300-i2,i3,100,100);
+					context.drawImage(maze,0,0,30,30,i2,600-i3,100,100);
+					context.drawImage(maze,0,0,30,30,1300-i2,600-i3,100,100);
+	      array[(i2+14*i3)/100].val="g";
+				array[(i2+14*(600-i3))/100].val="g";
+				array[(1300-i2+14*i3)/100].val="g";
+				array[(1300-i2+14*(600-i3))/100].val="g"; }
+				context.drawImage(maze,70,0,25,25,1300,0,100,100);
+      context.drawImage(frames[0],700,300,100,80);
+		}
+			var onImageLoad = function(){
+				console.log("IMAGE!!!");
+				frameCount++;
+			};
+			var setup = function() {
+				body = document.getElementById('body');
+				canvas = document.createElement('canvas');
+				context = canvas.getContext('2d');
+
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+				body.appendChild(canvas);
+                 for(var i=0; i < assets.length; i++){
+					var img = new Image();
+					img.onload = onImageLoad;
+					img.src = assets[i];
+					frames.push(img);
+      }
+       maze= new Image();
+      maze.onload=onMazeLoad;
+      maze.src="terrain1.png";
+    };
+			   window.onkeydown=move;
+			   window.onkeyup=stop;
+			   function stop()
+			   {
+					 window.onkeydown=move;
+				   clearInterval(go);
+					 if(1300-right+left<=750&&1400-right+left>=700&&100-down+top1>=300&&0-down+top1<=350)
+			 		{context.clearRect(0,0,canvas.width,canvas.height);
+			 			context.font="30px Arial";
+			 			context.fillText("GAME OVER",700,300)
+			 			window.onkeydown=null;
+			 			window.onkeyup=null;
+			 		}
+			   }
+                 function move(event)
+                 {
+                	 window.onkeydown=null;
+                	var key=event.which||event.keyCode;
+                if(key==68)
+                		{
+				go=setInterval(animate,framerate);}//50
+                if(key==87)
+                    {
+         go=setInterval(animate3,framerate);}//35
+               if(key==65)
+                    {
+          go=setInterval(animate4,framerate);}//48
+                 if(key==83)
+         		{
+			     go=setInterval(animate2,framerate);}}//63
+			var animate = function(){
+				if(kl==1)
+				{
+					ml++;
+					kl=0;
+				}
+				if (typeof(array[50+md+mr-ml-mt]) !== 'undefined') {
+				if(array[50+mr+md-ml-mt].val=="g")
+				{
+					right+=10;
+					context.clearRect(0,0,canvas.width,canvas.height);
+					for(var i1=0;i1<array.length;i1++)
+						if(array[i1].val=="g")
+						context.drawImage(maze,0,0,30,30,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+						else
+						context.drawImage(maze,35,0,25,25,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+           context.drawImage(maze,70,0,25,25,1300-right+left,0-down+top1,100,100);
+					 if(array[50+md+mr-ml-mt].x!==0&&array[50+md+mr-ml-mt].x!==1300)
+					 mr= parseInt (right/100);
+					 if(parseInt (right/100)-mr>0)
+					 {kr=1;
+						 right-=10;}
+				}
+				else
+				 context.drawImage(maze,0,0,30,30,700,300,100,100);
+          context.save();
+        context.translate(700+50,300+40);
+          context.rotate(0);
+  context.drawImage(frames[currentFrame],-50,-40,100,80);
+      currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+        context.restore();
+			}
+      }
+		  var animate2 = function(){
+				if(kr==1)
+				{
+					mr++;
+					kr=0;
+				}
+				if(kl==1)
+				{
+					ml++;
+					kl=0;
+				}
+				if (typeof(array[63+md+mr-ml-mt]) !== 'undefined') {
+				if(array[63+md+mr-ml-mt].val=="g")
+				{
+					down+=10;
+					context.clearRect(0,0,canvas.width,canvas.height);
+					for(var i1=0;i1<array.length;i1++)
+						if(array[i1].val=="g")
+						context.drawImage(maze,0,0,30,30,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+						else
+						context.drawImage(maze,35,0,25,25,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+             context.drawImage(maze,70,0,25,25,1300-right+left,0-down+top1,100,100);
+					 md= 14*(parseInt (down/100));
+				}
+				else
+				 context.drawImage(maze,0,0,30,30,700,300,100,100);
+        context.save();
+      context.translate(700+50,300+40);
+        context.rotate(Math.PI/2);
+        context.drawImage(frames[currentFrame],-50,-40,100,80);
+     currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+     context.restore();
+	 }
+      }
+      var animate3 = function(){
+				if(kr==1)
+				{
+					mr++;
+					kr=0;
+				}
+				if(kl==1)
+				{
+					ml++;
+					kl=0;
+				}
+				if (typeof(array[35+md+mr-ml-mt]) !== 'undefined') {
+				if(array[35+md+mr-ml-mt].val=="g")
+				{
+					top1+=10;
+					context.clearRect(0,0,canvas.width,canvas.height);
+					for(var i1=0;i1<array.length;i1++)
+					{
+						if(array[i1].val=="g")
+							context.drawImage(maze,0,0,30,30,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+						else
+							context.drawImage(maze,35,0,25,25,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+					}
+					context.drawImage(maze,70,0,25,25,1300-right+left,0-down+top1,100,100);
+					 mt= 14*(parseInt (top1/100));
+				}
+				else
+				 context.drawImage(maze,0,0,30,30,700,300,100,100);
+				context.save();
+			context.translate(700+50,300+40);
+				context.rotate(-Math.PI/2);
+				context.drawImage(frames[currentFrame],-50,-40,100,80);
+		 currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+		 context.restore();
+	}
+			}
+      var animate4 = function(){
+				if(kr==1)
+				{
+					mr++;
+					kr=0;
+				}
+				if (typeof(array[48+md+mr-ml-mt]) !== 'undefined') {
+				if(array[48+md+mr-ml-mt].val=="g")
+				{
+					left+=10;
+					context.clearRect(0,0,canvas.width,canvas.height);
+					for(var i1=0;i1<array.length;i1++)
+						if(array[i1].val=="g")
+						context.drawImage(maze,0,0,30,30,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+						else
+						context.drawImage(maze,35,0,25,25,array[i1].x-right+left,array[i1].y-down+top1,100,100);
+					 context.drawImage(maze,70,0,25,25,1300-right+left,0-down+top1,100,100);
+          if(array[48+md+mr-ml-mt].x!==0&&array[48+md+mr-ml-mt].x!==1300)
+					 ml= (parseInt (left/100));
+					 if(parseInt (left/100)-ml>0)
+					{kl=1;
+						left-=10;}
+				}
+
+				else
+				 context.drawImage(maze,0,0,30,30,700,300,100,100);
+				context.save();
+			context.translate(700+50,300+40);
+				context.rotate(Math.PI);
+				context.drawImage(frames[currentFrame],-50,-40,100,80);
+		 currentFrame = (currentFrame == frameCount-1)? 0: currentFrame+1;
+		 context.restore();
+	}
+			}
+			setup();
+		</script>
+	</body>
+</html>
