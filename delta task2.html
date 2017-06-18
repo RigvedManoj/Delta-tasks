@@ -3,17 +3,31 @@
 	<head>
 	</head>
   <style>
+	#p1{
+		position: fixed;
+		font-size: 60px;
+		font-weight: bolder;
+		color: #0000FF;
+		top:-30px;
+		left:1250px;
+	}
   body, canvas, html{margin:0;padding:0;border:0 none;}
   canvas{display: block;}
 }
 </style>
 	<body>
-
-		<div id="body">
+  <div id="body">
 		</div>
+		<p id="p1"></p>
+	</audio>
+	<audio id="au1">
+	<source src="tune.mp3" type="audio/mp3">
+	</audio>
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 		<script>
 		   var randomx,randomy;
+			 var timing;
+			   var sound= document.getElementById("au1");
 			 var count=0,x1=60,x2=0;
 		    var i=0,j=50,x=700,y=300,count=0;
         var maze,brk=0,mazecount=0;
@@ -26,8 +40,18 @@
 			var frames = [],array = [];
 			var frameCount = 0,  currentFrame =0, framerate = 1000/30, go;
 			var right=0,down=0;
-			var kl=0;
+			var kl=0,countdown=60;
+			function timer()
+			{
+					countdown--;
+					document.getElementById("p1").innerHTML=countdown;
+					if(countdown==0)
+					stop();
+			}
       var onMazeLoad= function(){
+				sound.load();
+				sound.play();
+				timing=setInterval(timer,1000);
 					for(var i1=-500;i1<=1800;i1+=50)
 					for(var i2=-500;i2<=1200;i2+=50)
 					{context.drawImage(maze,35,0,25,25,i1,i2,50,50);
@@ -121,10 +145,24 @@
 			   window.onkeyup=stop;
 			   function stop()
 			   {
-					 window.onkeydown=move;
+					 if(countdown==0)
+					 {
+						  sound.pause();
+						 clearInterval(go);
+						 clearInterval(timing);
+						 context.clearRect(0,0,canvas.width,canvas.height);
+						 context.font="30px Arial";
+						 context.fillText("YOU LOSE",700,300)
+ 			 			window.onkeydown=null;
+ 			 			window.onkeyup=null;
+					 }
+					 else {
+           window.onkeydown=move;
 				   clearInterval(go);
 					 if(randomx-right<=725&&randomx+50-right>=725&&randomy+50-down>=325&&randomy-down<=325)
-			 			{context.font="30px Arial";
+			 			{clearInterval(timing);
+							countdown=60;
+							context.font="30px Arial";
 						context.clearRect(0,0,canvas.width,canvas.height);
 						count++;
 						if(count<4)
@@ -137,12 +175,14 @@
 						 onMazeLoad();
 						}
 						else {
-
+            document.getElementById("p1").innerHTML="";
+						sound.pause();
 			 			context.fillText("YOU WIN",700,300)
 			 			window.onkeydown=null;
 			 			window.onkeyup=null;
 					}
 			 		}
+				}
 			   }
                  function move(event)
                  {
@@ -166,7 +206,7 @@
 	 //console.log(array[0].x)
  	for(var i1=0;i1<array.length;i1++)
  	 {
- 		 if(array[i1].x-right==740&&array[i1].y-down>=300&&array[i1].y-down<350)
+ 		 if(array[i1].x-right<=750&&array[i1].x-right>=740&&array[i1].y-down>=260&&array[i1].y-down<340)
  		 {
  			 if(array[i1].val=="b")
  		 kl=1;
@@ -192,7 +232,7 @@
 	 context.clearRect(0,0,canvas.width,canvas.height);
 	 for(var i1=0;i1<array.length;i1++)
 		{
-			if(array[i1].x-right>=675&&array[i1].x-right<725&&array[i1].y-down==350)
+			if(array[i1].x-right>=660&&array[i1].x-right<740&&array[i1].y-down<=340&&array[i1].y-down>=330)
 			{
 				if(array[i1].val=="b")
 			kl=1
@@ -217,7 +257,7 @@
 	 context.clearRect(0,0,canvas.width,canvas.height);
 	 for(var i1=0;i1<array.length;i1++)
 		{
-			if(array[i1].x-right>=675&&array[i1].x-right<725&&array[i1].y-down==250)
+			if(array[i1].x-right>=660&&array[i1].x-right<740&&array[i1].y-down>=250&&array[i1].y-down<=260)
 			{
 				if(array[i1].val=="b")
 			kl=1
@@ -242,7 +282,7 @@
 	context.clearRect(0,0,canvas.width,canvas.height);
 	 for(var i1=0;i1<array.length;i1++)
   	 {
-  		 if(array[i1].x-right==660&&array[i1].y-down>=300&&array[i1].y-down<350)
+  		 if(array[i1].x-right>=650&&array[i1].x-right<=660&&array[i1].y-down>=260&&array[i1].y-down<340)
   		 {
   			 if(array[i1].val=="b")
   		 kl=1
